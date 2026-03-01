@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Blog - Solo para Nosotros</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .login-box {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            margin: 50px auto;
+        }
+        
+        .login-box h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .login-box p {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        
+        .password-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            transition: border-color 0.3s;
+        }
+        
+        .password-input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            width: 100%;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        
+        .admin-panel {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .admin-header h2 {
+            font-size: 1.8em;
+            color: #2c3e50;
+        }
+        
+        .admin-header h2 span {
+            font-size: 0.6em;
+            color: #7f8c8d;
+            margin-left: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+            color: #34495e;
+        }
+        
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .form-group textarea {
+            min-height: 200px;
+            resize: vertical;
+        }
+        
+        .posts-list {
+            margin-top: 40px;
+        }
+        
+        .posts-list h3 {
+            margin-bottom: 20px;
+            color: #2c3e50;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+        
+        .post-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        
+        .post-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .post-info h4 {
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+        
+        .post-info p {
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+        
+        .post-actions button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
+            margin-left: 10px;
+            transition: transform 0.3s;
+        }
+        
+        .post-actions button:hover {
+            transform: scale(1.2);
+        }
+        
+        .btn-delete {
+            color: #e74c3c;
+        }
+        
+        .btn-edit {
+            color: #3498db;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .login-box {
+                padding: 20px;
+            }
+            
+            .admin-panel {
+                padding: 20px;
+            }
+            
+            .post-item {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .post-actions {
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div id="login-section">
+            <div class="login-box">
+                <h2>🔒 Área Privada</h2>
+                <p>Solo para nosotros dos</p>
+                <input type="password" id="password-input" class="password-input" placeholder="Contraseña" onkeypress="handleKeyPress(event)">
+                <button class="btn" onclick="checkPassword()">Entrar</button>
+                <a href="index.html" class="back-link">← Volver al blog</a>
+            </div>
+        </div>
+        
+        <div id="admin-section" style="display: none;">
+            <div class="admin-panel">
+                <div class="admin-header">
+                    <h2>📝 Administrar Blog <span>solo para nosotros</span></h2>
+                    <button class="btn btn-danger" onclick="logout()">Cerrar sesión</button>
+                </div>
+                
+                <div id="message"></div>
+                
+                <form id="post-form" onsubmit="savePost(event)">
+                    <h3 style="margin-bottom: 20px;">Crear/Editar Entrada</h3>
+                    <input type="hidden" id="edit-id">
+                    
+                    <div class="form-group">
+                        <label for="title">Título:</label>
+                        <input type="text" id="title" required placeholder="Escribe un título bonito...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="author">Autor:</label>
+                        <select id="author" required>
+                            <option value="">Selecciona quién escribe...</option>
+                            <option value="Tú">👤 Tú</option>
+                            <option value="Tu Novia">👩 Tu Novia</option>
+                            <option value="Nosotros">💑 Nosotros</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="content">Contenido:</label>
+                        <textarea id="content" required placeholder="Escribe lo que quieras compartir..."></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn" style="margin-bottom: 10px;">Publicar entrada</button>
+                    <button type="button" class="btn" style="background: #95a5a6;" onclick="cancelEdit()" id="cancel-edit" style="display: none;">Cancelar edición</button>
+                </form>
+                
+                <div class="posts-list">
+                    <h3>📚 Entradas publicadas</h3>
+                    <div id="posts-container">
+                        <!-- Las entradas se cargarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Contraseña - CÁMBIALA POR UNA QUE SOLO USTEDES DOS CONOZCAN
+        const CORRECT_PASSWORD = "nuestroblog2024"; // ¡CAMBIA ESTA CONTRASEÑA!
+        
+        // Manejar tecla Enter en el campo de contraseña
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkPassword();
+            }
+        }
+        
+        // Verificar contraseña
+        function checkPassword() {
+            const password = document.getElementById('password-input').value;
+            
+            if (password === CORRECT_PASSWORD) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('admin-section').style.display = 'block';
+                loadAdminPosts();
+                // Guardar sesión en sessionStorage
+                sessionStorage.setItem('adminLoggedIn', 'true');
+            } else {
+                alert('❌ Contraseña incorrecta. Solo para nosotros dos.');
+            }
+        }
+        
+        // Cerrar sesión
+        function logout() {
+            sessionStorage.removeItem('adminLoggedIn');
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('admin-section').style.display = 'none';
+            document.getElementById('password-input').value = '';
+        }
+        
+        // Verificar si ya hay sesión al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (sessionStorage.getItem('adminLoggedIn') === 'true') {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('admin-section').style.display = 'block';
+                loadAdminPosts();
+            }
+        });
+        
+        // Guardar post
+        function savePost(event) {
+            event.preventDefault();
+            
+            const editId = document.getElementById('edit-id').value;
+            const title = document.getElementById('title').value;
+            const author = document.getElementById('author').value;
+            const content = document.getElementById('content').value;
+            
+            if (!title || !author || !content) {
+                showMessage('Por favor, completa todos los campos', 'error');
+                return;
+            }
+            
+            // Obtener posts existentes
+            let posts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+            
+            if (editId) {
+                // Editar post existente
+                const index = posts.findIndex(p => p.id === editId);
+                if (index !== -1) {
+                    posts[index] = {
+                        ...posts[index],
+                        title,
+                        author,
+                        content,
+                        edited: new Date().toISOString()
+                    };
+                    showMessage('¡Entrada actualizada con éxito!', 'success');
+                }
+            } else {
+                // Crear nuevo post
+                const newPost = {
+                    id: Date.now().toString(),
+                    title,
+                    author,
+                    content,
+                    date: new Date().toISOString(),
+                };
+                posts.push(newPost);
+                showMessage('¡Nueva entrada publicada!', 'success');
+            }
+            
+            // Guardar en localStorage
+            localStorage.setItem('blogPosts', JSON.stringify(posts));
+            
+            // Limpiar formulario
+            document.getElementById('post-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('cancel-edit').style.display = 'none';
+            
+            // Recargar lista de posts
+            loadAdminPosts();
+        }
+        
+        // Cargar posts en el panel de administración
+        function loadAdminPosts() {
+            const container = document.getElementById('posts-container');
+            const posts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p style="text-align: center; color: #7f8c8d; padding: 20px;">Aún no hay entradas. ¡Crea la primera!</p>';
+                return;
+            }
+            
+            // Ordenar por fecha (más reciente primero)
+            posts.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            let html = '';
+            posts.forEach(post => {
+                const date = new Date(post.date).toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                });
+                
+                html += `
+                    <div class="post-item">
+                        <div class="post-info">
+                            <h4>${escapeHTML(post.title)}</h4>
+                            <p>Por ${escapeHTML(post.author)} - ${date}</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn-edit" onclick="editPost('${post.id}')" title="Editar">✏️</button>
+                            <button class="btn-delete" onclick="deletePost('${post.id}')" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Editar post
+        function editPost(id) {
+            const posts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+            const post = posts.find(p => p.id === id);
+            
+            if (post) {
+                document.getElementById('edit-id').value = post.id;
+                document.getElementById('title').value = post.title;
+                document.getElementById('author').value = post.author;
+                document.getElementById('content').value = post.content;
+                document.getElementById('cancel-edit').style.display = 'inline-block';
+                
+                // Hacer scroll hacia el formulario
+                document.getElementById('post-form').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+        
+        // Cancelar edición
+        function cancelEdit() {
+            document.getElementById('post-form').reset();
+            document.getElementById('edit-id').value = '';
+            document.getElementById('cancel-edit').style.display = 'none';
+        }
+        
+        // Eliminar post
+        function deletePost(id) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta entrada?')) {
+                let posts = JSON.parse(localStorage.getItem('blogPosts')) || [];
+                posts = posts.filter(p => p.id !== id);
+                localStorage.setItem('blogPosts', JSON.stringify(posts));
+                loadAdminPosts();
+                showMessage('Entrada eliminada', 'success');
+            }
+        }
+        
+        // Mostrar mensajes
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('message');
+            messageDiv.innerHTML = `<div class="${type}-message">${text}</div>`;
+            
+            setTimeout(() => {
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+        
+        // Función para escapar HTML
+        function escapeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
